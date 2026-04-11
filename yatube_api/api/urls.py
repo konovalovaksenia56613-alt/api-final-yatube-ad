@@ -9,9 +9,15 @@ router.register(r'follow', FollowViewSet, basename='follow')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('posts/<int:post_id>/comments/', 
-         CommentViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('posts/<int:post_id>/comments/<int:pk>/',
-         CommentViewSet.as_view({'get': 'retrieve', 'put': 'update', 
-                                 'patch': 'partial_update', 'delete': 'destroy'})),
+    path(
+        'posts/<int:post_id>/comments/',
+        CommentViewSet.as_view({'get': 'list', 'post': 'create'})
+    ),
+    path(
+        'posts/<int:post_id>/comments/<int:pk>/',
+        CommentViewSet.as_view({
+            'get': 'retrieve', 'put': 'update',
+            'patch': 'partial_update', 'delete': 'destroy'
+        })
+    ),
 ]
