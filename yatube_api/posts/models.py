@@ -14,7 +14,8 @@ class Post(models.Model):
         upload_to='posts/', null=True, blank=True
     )
     group = models.ForeignKey(
-        'Group', on_delete=models.SET_NULL, null=True, blank=True, related_name='posts'
+        'Group', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='posts'
     )
 
     def __str__(self):
