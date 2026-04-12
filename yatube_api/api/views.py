@@ -1,5 +1,5 @@
-from rest_framework.response import Response
 from rest_framework import viewsets, permissions, filters
+from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
 from posts.models import Post, Group, Comment, Follow
@@ -9,7 +9,7 @@ from .serializers import (
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by('-pub_date')
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -28,8 +28,9 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().order_by('id')
     serializer_class = GroupSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -39,7 +40,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         post_id = self.kwargs.get('post_id')
         post = get_object_or_404(Post, id=post_id)
-        return Comment.objects.filter(post=post)
+        return Comment.objects.filter(post=post).order_by('-created')
 
     def perform_create(self, serializer):
         post_id = self.kwargs.get('post_id')
@@ -64,16 +65,7 @@ class FollowViewSet(viewsets.ModelViewSet):
     search_fields = ['following__username']
 
     def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
+        return Follow.objects.filter(user=self.request.user).order_by('-id')
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
