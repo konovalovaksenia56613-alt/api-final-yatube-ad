@@ -6,10 +6,7 @@ User = get_user_model()
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(
-        slug_field='username',
-        read_only=True
-    )
+    author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
         model = Post
@@ -23,10 +20,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(
-        slug_field='username',
-        read_only=True
-    )
+    author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
         model = Comment
@@ -35,10 +29,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(
-        slug_field='username',
-        read_only=True
-    )
+    user = serializers.ReadOnlyField(source='user.username')
     following = serializers.SlugRelatedField(
         slug_field='username',
         queryset=User.objects.all()
