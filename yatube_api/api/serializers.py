@@ -6,11 +6,14 @@ User = get_user_model()
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
+    author = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
         fields = ('id', 'text', 'pub_date', 'author', 'image', 'group')
+
+    def get_author(self, obj):
+        return obj.author.username
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -20,16 +23,19 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
+    author = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
         fields = ('id', 'author', 'post', 'text', 'created')
         read_only_fields = ('post',)
 
+    def get_author(self, obj):
+        return obj.author.username
+
 
 class FollowSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
+    user = serializers.SerializerMethodField()
     following = serializers.SlugRelatedField(
         slug_field='username',
         queryset=User.objects.all()
@@ -38,6 +44,9 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Follow
         fields = ('user', 'following')
+
+    def get_user(self, obj):
+        return obj.user.username
 
     def validate(self, data):
         request = self.context.get('request')
