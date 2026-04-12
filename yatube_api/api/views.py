@@ -17,7 +17,8 @@ class PostViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         # Проверяем, что поле author есть
-        print("First post data:", serializer.data[0] if serializer.data else "No data")
+        first = serializer.data[0] if serializer.data else "No data"
+        print("First post data:", first)
         return Response(serializer.data)
 
     def perform_create(self, serializer):
