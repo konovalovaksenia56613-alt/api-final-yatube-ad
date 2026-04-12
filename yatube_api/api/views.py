@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, filters
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.response import Response
 from posts.models import Post, Group, Comment, Follow
 from .serializers import (
     PostSerializer, GroupSerializer, CommentSerializer, FollowSerializer
@@ -11,6 +12,13 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-pub_date')
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        # Проверяем, что поле author есть
+        print("First post data:", serializer.data[0] if serializer.data else "No data")
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
