@@ -13,6 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ('id', 'text', 'pub_date', 'author', 'image', 'group')
 
     def get_author(self, obj):
+        print(f"Post author: {obj.author.username}")
         return obj.author.username
 
 
@@ -31,6 +32,7 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only_fields = ('post',)
 
     def get_author(self, obj):
+        print(f"Comment author: {obj.author.username}")
         return obj.author.username
 
 
