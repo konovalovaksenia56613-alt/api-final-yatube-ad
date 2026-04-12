@@ -92,13 +92,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
+    'DEFAULT_PAGINATION_CLASS': None,
 }
-
-REST_FRAMEWORK['DEFAULT_PAGINATION_CLASS'] = 'rest_framework.pagination.LimitOffsetPagination'
-REST_FRAMEWORK['PAGE_SIZE'] = 10
-
-REST_FRAMEWORK['DEFAULT_PAGINATION_CLASS'] = 'rest_framework.pagination.PageNumberPagination'
-REST_FRAMEWORK['PAGE_SIZE'] = 10
-
-REST_FRAMEWORK['DEFAULT_PAGINATION_CLASS'] = 'rest_framework.pagination.LimitOffsetPagination'
-REST_FRAMEWORK['PAGE_SIZE'] = 10
